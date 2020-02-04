@@ -46,6 +46,22 @@
 		<freemarker.version>2.3.23</freemarker.version>
 		<quartz.version>2.2.2</quartz.version>
 	</properties>
+
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-release</id>
+			<name>user release res</name>
+			<url>http://localhost:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>user release res</name>
+			<url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- 时间操作组件 -->
