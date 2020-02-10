@@ -1,4 +1,4 @@
-package com.jqproject.concurrent;
+package com.jqproject.concurrent.aqs;
 
 import java.util.concurrent.CountDownLatch;
 

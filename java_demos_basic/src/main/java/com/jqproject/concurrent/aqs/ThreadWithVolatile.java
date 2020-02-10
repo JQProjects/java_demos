@@ -1,4 +1,4 @@
-package com.jqproject.aqs;
+package com.jqproject.concurrent.aqs;
 
 /**
  * @author 姜庆

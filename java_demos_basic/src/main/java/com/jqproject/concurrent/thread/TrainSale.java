@@ -1,4 +1,4 @@
-package com.jqproject.thread;
+package com.jqproject.concurrent.thread;
 
 /**
  * @author 姜庆

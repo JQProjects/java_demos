@@ -1,4 +1,4 @@
-package com.jqproject.lock;
+package com.jqproject.concurrent.lock;
 
 
 class ResNumber{

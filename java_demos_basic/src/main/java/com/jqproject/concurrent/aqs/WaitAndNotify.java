@@ -1,7 +1,5 @@
-package com.jqproject.lock;
+package com.jqproject.concurrent.aqs;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 class Res{
     public String name;
@@ -22,13 +20,19 @@ class Input extends Thread{
     @Override
     public void run() {
         long count = 0;
-        try {
-            LockDemo.lock.lock();
-
+        synchronized (Res.class){
             while (true){
+
                 if(!res.flag){
-                    LockDemo.cond.await();
+                    try {
+                        //注意是同一把锁上进行信息传递
+                        Res.class.wait();
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+
                 if(count==0){
                     res.gender = "男";
                     res.name = "李明";
@@ -38,14 +42,9 @@ class Input extends Thread{
                 }
                 count = (count+1)%2;
                 res.flag=false;
-                LockDemo.cond.signal();
+                Res.class.notify();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            LockDemo.lock.unlock();
         }
-
     }
 }
 class Out extends Thread{
@@ -58,42 +57,33 @@ class Out extends Thread{
     @Override
     public void run() {
 
-        try {
-            LockDemo.lock.lock();
-
+        synchronized (Res.class){
             while (true) {
-                if (res.flag) {
-                    LockDemo.cond.await();
+                if(res.flag){
+                    try {
+                        Res.class.wait();
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-                System.out.println(res.name + "," + res.gender);
-                res.flag = true;
-                LockDemo.cond.signal();
+                System.out.println(res.name+","+res.gender);
+                res.flag=true;
+                Res.class.notify();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            LockDemo.lock.unlock();
         }
-
     }
 }
-
-
 /**
  * @author 姜庆
- * @create 2020-02-05 17:34
- * @desc Lock和condition进行线程同步
+ * @create 2020-02-05 16:59
+ * @desc 线程通讯和同步
  **/
-public class LockDemo {
-    public static ReentrantLock lock = new ReentrantLock();
-    public static Condition cond = lock.newCondition();
-
+public class WaitAndNotify {
     public static void main(String[] args) {
-
-         Res res = new Res();
-         Input input = new Input(res);
-         Out out = new Out(res);
-
+        Res res = new Res();
+        Input input = new Input(res);
+        Out out = new Out(res);
         input.start();
         out.start();
     }

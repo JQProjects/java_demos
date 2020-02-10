@@ -1,4 +1,4 @@
-package com.jqproject.aqs;
+package com.jqproject.concurrent.aqs;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
