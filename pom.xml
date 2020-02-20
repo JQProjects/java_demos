@@ -14,7 +14,8 @@
 		<module>java_demos_transaction</module>
 		<module>java_demos_bigdata</module>
 		<module>java_demos_tools</module>
-	</modules>
+        <module>java_demos_rpc</module>
+    </modules>
 	<packaging>pom</packaging>
   	<properties>
 		<junit.version>4.12</junit.version>
@@ -52,12 +53,12 @@
 		<repository>
 			<id>nexus-release</id>
 			<name>user release res</name>
-			<url>http://localhost:8081/nexus/content/repositories/releases/</url>
+			<url>http://localhost:8081/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
 			<name>user release res</name>
-			<url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://localhost:8081/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
