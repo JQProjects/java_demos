@@ -1,12 +1,18 @@
 package com.jqproject.netty5;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
+
+import static com.jqproject.netty5.Netty5Client.DILIMITER_STR;
 
 /**
  * @author 姜庆
@@ -23,7 +29,7 @@ public class Netty5Server {
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             String message = (String) msg;
             System.out.println("recieve:"+message);
-            String res = "Server OK..";
+            String res = "Server OK.."+DILIMITER_STR;
             ctx.writeAndFlush(Unpooled.copiedBuffer(res.getBytes()));
         }
     }
@@ -44,6 +50,13 @@ public class Netty5Server {
 
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        //0.采用回车换行解码器：LineBasedFrameDecoder lineBasedFrameDecoder = new LineBasedFrameDecoder(1024);
+                        //1.采用定长解码器,这里的11是等于我client测试的预期的
+//                        socketChannel.pipeline().addLast(new FixedLengthFrameDecoder(11));
+                        //2.采用分割符的方式
+                        ByteBuf dilimiter_buf = Unpooled.copiedBuffer(DILIMITER_STR.getBytes());
+                        socketChannel.pipeline().addLast(new DelimiterBasedFrameDecoder(1024,dilimiter_buf));
+                        //单纯字符串解码器是没法解决粘包的
                         socketChannel.pipeline().addLast(new StringDecoder());
                         socketChannel.pipeline().addLast(new ServerHandler());
                     }

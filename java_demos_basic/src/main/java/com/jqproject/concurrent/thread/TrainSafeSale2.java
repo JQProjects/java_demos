@@ -1,5 +1,7 @@
 package com.jqproject.concurrent.thread;
 
+import java.util.concurrent.locks.LockSupport;
+
 /**
  * @author 姜庆
  * @create 2020-02-04 19:11
@@ -16,13 +18,13 @@ public class TrainSafeSale2 implements Runnable {
 
     @Override
     public void run() {
-
+        LockSupport.park();
         if (flag) {
             sale();
         } else {
 
             while (totalCount > 0) {
-                //锁对象应该是一个不可变对象
+                //锁对象应该是一个hashcode不能变的对象
                 synchronized (this) {
                     if (totalCount > 0) {
                         System.out.println(Thread.currentThread().getName() + ",现在售卖第" + (100 - totalCount + 1) + "张票");
